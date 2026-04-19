@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { generateQuestion } from '../lib/gemini';
 import { useStore, GameMode } from '../store/useStore';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Loader2, ArrowRight, AlertCircle, MapPin } from 'lucide-react';
+import { Loader2, ArrowRight, AlertCircle, MapPin, Sparkles } from 'lucide-react';
 
 interface QuizModeProps {
   mode: GameMode;
@@ -79,7 +79,7 @@ export default function QuizMode({ mode, title, themeColor }: QuizModeProps) {
             <motion.div 
               className="bg-gradient-to-r from-blue-500 to-cyan-400 h-3 rounded-full"
               initial={{ width: 0 }}
-              animate={{ width: \`\${nordicProgress}%\` }}
+              animate={{ width: `${nordicProgress}%` }}
             />
           </div>
         </div>
@@ -130,7 +130,7 @@ export default function QuizMode({ mode, title, themeColor }: QuizModeProps) {
                       key={idx}
                       onClick={() => handleAnswer(idx)}
                       disabled={showResult}
-                      className={\`w-full text-left p-4 rounded-xl border transition-all duration-300 \${btnClass}\`}
+                      className={`w-full text-left p-4 rounded-xl border transition-all duration-300 ${btnClass}`}
                     >
                       <div className="flex items-center">
                         <span className="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center mr-4 text-sm font-bold opacity-70">

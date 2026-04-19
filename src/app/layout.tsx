@@ -16,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr">
-      <body className={\`\${inter.className} bg-slate-900 text-slate-100 min-h-screen selection:bg-indigo-500/30\`}>
+      <body className={`${inter.className} bg-slate-900 text-slate-100 min-h-screen selection:bg-indigo-500/30`}>
         {/* Background ambient light */}
         <div className="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
           <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-indigo-500/10 blur-[120px]" />

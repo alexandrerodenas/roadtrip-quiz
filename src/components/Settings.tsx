@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { useStore } from '../store/useStore';
-import { Settings as SettingsIcon, Car, Key, Users } from 'lucide-react';
+import { verifyApiKey } from '../lib/gemini';
+import { Settings as SettingsIcon, Car, Key, Users, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function Settings() {
@@ -11,8 +12,9 @@ export default function Settings() {
   const [player1, setPlayer1] = useState(players[0]?.name || '');
   const [player2, setPlayer2] = useState(players[1]?.name || '');
   const [error, setError] = useState('');
+  const [isVerifying, setIsVerifying] = useState(false);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!localKey) {
       setError("Il faut une clé API Gemini !");
       return;
@@ -22,6 +24,17 @@ export default function Settings() {
       return;
     }
     
+    setIsVerifying(true);
+    setError('');
+    
+    const isValid = await verifyApiKey(localKey);
+    setIsVerifying(false);
+    
+    if (!isValid) {
+      setError("La clé API est invalide ou ne fonctionne pas. Vérifiez-la.");
+      return;
+    }
+
     setApiKey(localKey);
     setPlayers([{ name: player1 }, { name: player2 }]);
     setMode('menu');
@@ -92,9 +105,10 @@ export default function Settings() {
 
         <button 
           onClick={handleSave}
-          className="w-full bg-gradient-to-r from-indigo-500 to-cyan-500 hover:from-indigo-600 hover:to-cyan-600 text-white font-bold py-3 px-4 rounded-lg shadow-lg transform transition hover:scale-105 active:scale-95"
+          disabled={isVerifying}
+          className="w-full bg-gradient-to-r from-indigo-500 to-cyan-500 hover:from-indigo-600 hover:to-cyan-600 text-white font-bold py-3 px-4 rounded-lg shadow-lg transform transition hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center"
         >
-          Démarrer l'aventure
+          {isVerifying ? <Loader2 className="w-5 h-5 animate-spin" /> : "Démarrer l'aventure"}
         </button>
       </div>
     </motion.div>

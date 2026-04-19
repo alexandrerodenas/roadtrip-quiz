@@ -1,6 +1,18 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { useStore } from '../store/useStore';
 
+export async function verifyApiKey(apiKey: string): Promise<boolean> {
+  try {
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    await model.generateContent("Test");
+    return true;
+  } catch (error) {
+    console.error("Erreur de vérification de la clé:", error);
+    return false;
+  }
+}
+
 export async function generateQuestion(mode: string, difficulty: string = 'moyen') {
   const { apiKey } = useStore.getState();
   if (!apiKey) throw new Error("Clé API manquante");
@@ -38,7 +50,7 @@ export async function generateQuestion(mode: string, difficulty: string = 'moyen
     const cleanText = text.replace(/```json/g, '').replace(/```/g, '').trim();
     return JSON.parse(cleanText);
   } catch (error) {
-    console.error("Erreur Gemini:", error);
+    console.error("Erreur Gemini détaillée:", error);
     throw error;
   }
 }

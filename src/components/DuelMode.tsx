@@ -96,11 +96,11 @@ export default function DuelMode() {
 
       <div className="flex justify-between bg-slate-800/50 p-4 rounded-2xl border border-slate-700">
         {[0, 1].map((pIdx) => (
-          <div key={pIdx} className={\`flex items-center gap-2 \${turn === pIdx ? 'opacity-100' : 'opacity-50'}\`}>
+          <div key={pIdx} className={`flex items-center gap-2 ${turn === pIdx ? 'opacity-100' : 'opacity-50'}`}>
             <span className="font-bold text-white mr-2">{players[pIdx].name}</span>
             <div className="flex gap-1">
               {[...Array(3)].map((_, i) => (
-                <CircleDashed key={i} className={\`w-6 h-6 \${i < lives[pIdx] ? 'text-rose-500 fill-rose-500/20' : 'text-slate-700'}\`} />
+                <CircleDashed key={i} className={`w-6 h-6 ${i < lives[pIdx] ? 'text-rose-500 fill-rose-500/20' : 'text-slate-700'}`} />
               ))}
             </div>
           </div>
@@ -139,7 +139,7 @@ export default function DuelMode() {
                     key={idx}
                     onClick={() => handleAnswer(idx)}
                     disabled={showResult}
-                    className={\`w-full text-left p-4 rounded-xl border transition-all duration-300 \${btnClass}\`}
+                    className={`w-full text-left p-4 rounded-xl border transition-all duration-300 ${btnClass}`}
                   >
                     {opt}
                   </button>
