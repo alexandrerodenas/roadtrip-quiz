@@ -2,12 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  body {
-    @apply text-slate-100;
-  }
-}
-
 @layer components {
   .btn-animated {
     @apply transition-transform duration-200 hover:scale-105 active:scale-95;
