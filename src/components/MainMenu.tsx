@@ -2,7 +2,7 @@
 
 import { useStore } from '../store/useStore';
 import { motion } from 'framer-motion';
-import { Map, Swords, Sparkles, Navigation, Settings } from 'lucide-react';
+import Image from 'next/image';
 
 export default function MainMenu() {
   const { players, setMode, setApiKey } = useStore();
@@ -12,7 +12,7 @@ export default function MainMenu() {
       id: 'nordic',
       title: 'Expédition Nordique',
       desc: 'Nantes ➔ Lofoten ➔ Suède. Un mode spécial coopératif thématisé sur votre trajet !',
-      icon: <Map className="w-8 h-8" />,
+      iconPath: '/icons/quiz.svg',
       color: 'from-blue-500 to-cyan-400',
       shadow: 'shadow-cyan-500/20'
     },
@@ -20,23 +20,23 @@ export default function MainMenu() {
       id: 'coop',
       title: 'Pilote & Copilote',
       desc: 'Répondez ensemble pour faire avancer la jauge de voyage.',
-      icon: <Navigation className="w-8 h-8" />,
+      iconPath: '/icons/maitre.svg',
       color: 'from-emerald-500 to-green-400',
       shadow: 'shadow-emerald-500/20'
     },
     {
       id: 'duel',
-      title: 'Duel de l\'Autoroute',
+      title: 'Duel de l\\'Autoroute',
       desc: 'Chacun son tour. 3 vies. Le premier à perdre ses roues de secours a un gage !',
-      icon: <Swords className="w-8 h-8" />,
+      iconPath: '/icons/duel.svg',
       color: 'from-rose-500 to-orange-400',
       shadow: 'shadow-rose-500/20'
     },
     {
       id: 'maitre',
       title: 'Le Maître du Jeu',
-      desc: 'Faites deviner un mot à l\'autre sans prononcer les mots interdits.',
-      icon: <Sparkles className="w-8 h-8" />,
+      desc: 'Faites deviner un mot à l\\'autre sans prononcer les mots interdits.',
+      iconPath: '/icons/maitre.svg',
       color: 'from-purple-500 to-pink-400',
       shadow: 'shadow-purple-500/20'
     }
@@ -58,7 +58,7 @@ export default function MainMenu() {
           onClick={() => { setApiKey(''); }} 
           className="p-3 text-slate-400 hover:text-white bg-slate-700/50 rounded-xl transition-colors"
         >
-          <Settings className="w-5 h-5" />
+          <Image src="/icons/settings.svg" alt="Settings" width={20} height={20} />
         </button>
       </div>
 
@@ -70,16 +70,16 @@ export default function MainMenu() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
             onClick={() => setMode(mode.id as any)}
-            className={`text-left p-6 rounded-2xl bg-slate-800/80 border border-slate-700 hover:border-slate-500 transition-all shadow-xl hover:-translate-y-1 relative overflow-hidden group`}
+            className={`text-left p-6 rounded-2xl bg-slate-800/80 border border-slate-700 hover:border-slate-500 transition-all shadow-xl hover:-translate-y-1 relative overflow-hidden group btn-animated card-glow`}
           >
             <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${mode.color} opacity-10 rounded-full blur-2xl group-hover:opacity-20 transition-opacity`} />
             <div className={`inline-flex p-3 rounded-xl bg-gradient-to-br ${mode.color} text-white mb-4 shadow-lg ${mode.shadow}`}>
-              {mode.icon}
+              <Image src={mode.iconPath} alt={mode.title} width={32} height={32} />
             </div>
             <h3 className="text-xl font-bold text-white mb-2">{mode.title}</h3>
             <p className="text-slate-400 text-sm leading-relaxed">{mode.desc}</p>
           </motion.button>
-        ))}
+        ))}`
       </div>
     </div>
   );

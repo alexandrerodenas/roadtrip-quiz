@@ -25,7 +25,7 @@ export default function Home() {
   return (
     <>
       <header className="mb-10 text-center">
-        <h1 className="text-4xl font-black bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-cyan-400 to-emerald-400 inline-block mb-2">
+        <h1 className="text-6xl font-black bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 inline-block mb-4 animate-pulse">
           Roadtrip Quiz
         </h1>
         {currentMode === 'menu' && <p className="text-slate-400">Prêts pour l'aventure ?</p>}
