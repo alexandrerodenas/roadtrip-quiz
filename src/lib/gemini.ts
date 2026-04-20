@@ -4,7 +4,7 @@ import { useStore } from '../store/useStore';
 export async function verifyApiKey(apiKey: string): Promise<boolean> {
   try {
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-001" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     await model.generateContent("Test");
     return true;
   } catch (error) {
@@ -18,9 +18,9 @@ export async function generateQuestion(mode: string, difficulty: string = 'moyen
   if (!apiKey) throw new Error("Clé API manquante");
 
   const genAI = new GoogleGenerativeAI(apiKey);
-  // Using gemini-2.5-pro or gemini-1.5-flash-001 based on availability, using standard text generation.
-  // We'll use gemini-1.5-flash-001 as it's fast and reliable for simple json generation.
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-001" });
+  // Using gemini-2.5-pro or gemini-1.5-flash based on availability, using standard text generation.
+  // We'll use gemini-1.5-flash as it's fast and reliable for simple json generation.
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
   let prompt = "";
 
