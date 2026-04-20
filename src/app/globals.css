@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply bg-gradient-to-br from-slate-900 via-gray-900 to-slate-900 text-slate-100;
+    @apply text-slate-100;
   }
 }
 

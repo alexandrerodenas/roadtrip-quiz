@@ -26,7 +26,7 @@ export default function MainMenu() {
     },
     {
       id: 'duel',
-      title: 'Duel de l\\'Autoroute',
+      title: "Duel de l'Autoroute",
       desc: 'Chacun son tour. 3 vies. Le premier à perdre ses roues de secours a un gage !',
       iconPath: '/icons/duel.svg',
       color: 'from-rose-500 to-orange-400',
@@ -35,7 +35,7 @@ export default function MainMenu() {
     {
       id: 'maitre',
       title: 'Le Maître du Jeu',
-      desc: 'Faites deviner un mot à l\\'autre sans prononcer les mots interdits.',
+      desc: "Faites deviner un mot à l'autre sans prononcer les mots interdits.",
       iconPath: '/icons/maitre.svg',
       color: 'from-purple-500 to-pink-400',
       shadow: 'shadow-purple-500/20'
@@ -79,7 +79,7 @@ export default function MainMenu() {
             <h3 className="text-xl font-bold text-white mb-2">{mode.title}</h3>
             <p className="text-slate-400 text-sm leading-relaxed">{mode.desc}</p>
           </motion.button>
-        ))}`
+        ))}
       </div>
     </div>
   );
