@@ -70,7 +70,7 @@ export default function MainMenu() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
             onClick={() => setMode(mode.id as any)}
-            className={`text-left p-6 rounded-2xl bg-slate-800/80 border border-slate-700 hover:border-slate-500 transition-all shadow-xl hover:-translate-y-1 relative overflow-hidden group btn-animated card-glow`}
+            className={`text-left p-6 rounded-2xl bg-slate-800/80 border border-slate-700 hover:border-slate-500 transition-all shadow-xl hover:-translate-y-1 relative overflow-hidden group transition-transform duration-200 hover:scale-105 active:scale-95 shadow-lg transition-shadow duration-300 hover:shadow-cyan-500/30`}
           >
             <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${mode.color} opacity-10 rounded-full blur-2xl group-hover:opacity-20 transition-opacity`} />
             <div className={`inline-flex p-3 rounded-xl bg-gradient-to-br ${mode.color} text-white mb-4 shadow-lg ${mode.shadow}`}>
