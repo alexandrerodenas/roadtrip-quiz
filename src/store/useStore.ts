@@ -1,10 +1,17 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+export type Jokers = {
+  ferry: number;
+  aurora: number;
+  troll: number;
+};
+
 export type Player = {
   id: string;
   name: string;
   score: number;
+  jokers: Jokers;
 };
 
 export type GameMode = 'menu' | 'coop' | 'duel' | 'maitre' | 'nordic';
@@ -13,14 +20,18 @@ interface GameState {
   apiKey: string;
   setApiKey: (key: string) => void;
   players: Player[];
-  setPlayers: (players: Omit<Player, 'id' | 'score'>[]) => void;
+  setPlayers: (players: Omit<Player, 'id' | 'score' | 'jokers'>[]) => void;
   updateScore: (playerId: string, points: number) => void;
+  useJoker: (playerId: string, jokerType: keyof Jokers) => void;
+  addJoker: (playerId: string, jokerType: keyof Jokers) => void;
   currentMode: GameMode;
   setMode: (mode: GameMode) => void;
   nordicProgress: number; // Percentage or steps to Lofoten
   advanceNordic: (steps: number) => void;
   resetGame: () => void;
 }
+
+const defaultJokers = { ferry: 1, aurora: 1, troll: 2 };
 
 export const useStore = create<GameState>()(
   persist(
@@ -32,12 +43,27 @@ export const useStore = create<GameState>()(
         players: newPlayers.map(p => ({
           id: Math.random().toString(36).substring(7),
           name: p.name,
-          score: 0
+          score: 0,
+          jokers: { ...defaultJokers }
         }))
       }),
       updateScore: (playerId, points) => set((state) => ({
         players: state.players.map(p => 
           p.id === playerId ? { ...p, score: p.score + points } : p
+        )
+      })),
+      useJoker: (playerId, jokerType) => set((state) => ({
+        players: state.players.map(p => 
+          p.id === playerId && p.jokers[jokerType] > 0
+            ? { ...p, jokers: { ...p.jokers, [jokerType]: p.jokers[jokerType] - 1 } }
+            : p
+        )
+      })),
+      addJoker: (playerId, jokerType) => set((state) => ({
+        players: state.players.map(p => 
+          p.id === playerId 
+            ? { ...p, jokers: { ...p.jokers, [jokerType]: p.jokers[jokerType] + 1 } }
+            : p
         )
       })),
       currentMode: 'menu',
@@ -47,7 +73,7 @@ export const useStore = create<GameState>()(
         nordicProgress: Math.min(100, state.nordicProgress + steps)
       })),
       resetGame: () => set((state) => ({
-        players: state.players.map(p => ({ ...p, score: 0 })),
+        players: state.players.map(p => ({ ...p, score: 0, jokers: { ...defaultJokers } })),
         nordicProgress: 0,
         currentMode: 'menu'
       }))
