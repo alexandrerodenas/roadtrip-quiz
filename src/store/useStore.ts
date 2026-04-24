@@ -80,7 +80,9 @@ export const useStore = create<GameState>()(
         currentMode: 'menu'
       })),
       difficulty: 'moyen',
-      setDifficulty: (difficulty) => set({ difficulty })
+      setDifficulty: (difficulty) => set({ difficulty }),
+      // Ajout de méthodes pour le mode cuisine
+      // ... (à implémenter)
     }),
     {
       name: 'roadtrip-quiz-storage',

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { useStore, GameMode } from '../store/useStore';
+import { useStore } from '../store/useStore';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Loader2, ArrowRight, AlertCircle, ChefHat, Timer } from 'lucide-react';
 
@@ -11,7 +11,7 @@ interface CuisineModeProps {
 }
 
 export default function CuisineMode({ title, themeColor }: CuisineModeProps) {
-  const { setMode, updateScore, players, difficulty, setDifficulty } = useStore();
+  const { setMode, updateScore, players, difficulty } = useStore();
   const [loading, setLoading] = useState(true);
   const [questionData, setQuestionData] = useState<any>(null);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
@@ -107,74 +107,62 @@ export default function CuisineMode({ title, themeColor }: CuisineModeProps) {
             </button>
           </div>
         ) : (
-          <AnimatePresence mode="wait">
-            <motion.div 
-              key={questionData?.question}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="bg-slate-800/80 border border-slate-700 rounded-3xl overflow-hidden shadow-2xl"
-            >
-              <div className="p-8">
-                <h2 className="text-2xl font-bold text-white mb-6 leading-relaxed">
-                  {questionData?.question}
-                </h2>
+          <div className="bg-slate-800/80 border border-slate-700 rounded-3xl overflow-hidden shadow-2xl">
+            <div className="p-8">
+              <h2 className="text-2xl font-bold text-white mb-6 leading-relaxed">
+                {questionData?.question}
+              </h2>
 
-                <div className="space-y-3">
-                  {questionData?.options.map((option: string, idx: number) => {
-                    const isSelected = selectedAnswer === idx;
-                    const isCorrect = showResult && idx === questionData.correctOptionIndex;
-                    const isWrongSelected = showResult && isSelected && !isCorrect;
+              <div className="space-y-3">
+                {questionData?.options.map((option: string, idx: number) => {
+                  const isSelected = selectedAnswer === idx;
+                  const isCorrect = showResult && idx === questionData.correctOptionIndex;
+                  const isWrongSelected = showResult && isSelected && !isCorrect;
 
-                    let btnClass = "bg-slate-900 border-slate-700 text-slate-300 hover:bg-slate-700 hover:border-slate-500";
-                    if (showResult) {
-                      if (isCorrect) btnClass = "bg-green-500/20 border-green-500 text-green-300";
-                      else if (isWrongSelected) btnClass = "bg-red-500/20 border-red-500 text-red-300";
-                      else btnClass = "bg-slate-900 border-slate-800 text-slate-600 opacity-50";
-                    }
+                  let btnClass = "bg-slate-900 border-slate-700 text-slate-300 hover:bg-slate-700 hover:border-slate-500";
+                  if (showResult) {
+                    if (isCorrect) btnClass = "bg-green-500/20 border-green-500 text-green-300";
+                    else if (isWrongSelected) btnClass = "bg-red-500/20 border-red-500 text-red-300";
+                    else btnClass = "bg-slate-900 border-slate-800 text-slate-600 opacity-50";
+                  }
 
-                    return (
-                      <button
-                        key={idx}
-                        onClick={() => handleAnswer(idx)}
-                        disabled={showResult}
-                        className={`w-full text-left p-4 rounded-xl border transition-all duration-300 ${btnClass}`}
-                      >
-                        <div className="flex items-center">
-                          <span className="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center mr-4 text-sm font-bold opacity-70">
-                            {['A', 'B', 'C', 'D'][idx]}
-                          </span>
-                          <span className="text-lg">{option}</span>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {showResult && (
-                  <motion.div 
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    className="mt-8 p-5 bg-amber-500/10 border border-amber-500/30 rounded-xl"
-                  >
-                    <h4 className="text-amber-400 font-bold mb-2 flex items-center">
-                      <ChefHat className="w-4 h-4 mr-2" />
-                      Le saviez-vous ?
-                    </h4>
-                    <p className="text-slate-300 leading-relaxed text-sm">
-                      {questionData?.funFact}
-                    </p>
-                    <button 
-                      onClick={loadQuestion}
-                      className="mt-6 w-full bg-white text-slate-900 font-bold py-3 rounded-xl hover:bg-slate-200 transition-colors flex justify-center items-center"
+                  return (
+                    <button
+                      key={idx}
+                      onClick={() => handleAnswer(idx)}
+                      disabled={showResult}
+                      className={`w-full text-left p-4 rounded-xl border transition-all duration-300 ${btnClass}`}
                     >
-                      Question suivante <ArrowRight className="w-4 h-4 ml-2" />
+                      <div className="flex items-center">
+                        <span className="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center mr-4 text-sm font-bold opacity-70">
+                          {['A', 'B', 'C', 'D'][idx]}
+                        </span>
+                        <span className="text-lg">{option}</span>
+                      </div>
                     </button>
-                  </motion.div>
-                )}
+                  );
+                })}
               </div>
-            </motion.div>
-          </AnimatePresence>
+
+              {showResult && (
+                <div className="mt-8 p-5 bg-amber-500/10 border border-amber-500/30 rounded-xl">
+                  <h4 className="text-amber-400 font-bold mb-2 flex items-center">
+                    <ChefHat className="w-4 h-4 mr-2" />
+                    Le saviez-vous ?
+                  </h4>
+                  <p className="text-slate-300 leading-relaxed text-sm">
+                    {questionData?.funFact}
+                  </p>
+                  <button 
+                    onClick={loadQuestion}
+                    className="mt-6 w-full bg-white text-slate-900 font-bold py-3 rounded-xl hover:bg-slate-200 transition-colors flex justify-center items-center"
+                  >
+                    Question suivante <ArrowRight className="w-4 h-4 ml-2" />
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
         )}
       </div>
     </div>

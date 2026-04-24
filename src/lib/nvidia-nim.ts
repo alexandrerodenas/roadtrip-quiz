@@ -1,4 +1,6 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 // Types pour l'API NVIDIA NIM
 interface NvidiaNimConfig {
@@ -22,20 +24,38 @@ const nvidiaNimConfig: NvidiaNimConfig = {
 
 // Fonction pour générer une question via l'API NVIDIA NIM
 export async function generateQuestion(prompt: string): Promise<any> {
-  // Pour l'instant, cette fonction est un placeholder
-  // Elle sera implémentée avec l'API NVIDIA NIM réelle
-  console.log('NVIDIA NIM API call avec le prompt:', prompt);
-  
-  // Simulation d'une réponse
-  return {
-    question: "Quel est l'ingrédient principal de la bouillabaisse ?",
-    options: [
-      "Poisson et fruits de mer",
-      "Fruits de mer uniquement", 
-      "Viande de bœuf",
-      "Légumes variés"
-    ],
-    correctOptionIndex: 0,
-    funFact: "La bouillabaisse traditionnelle marseillaise contient au moins 4 sortes de poissons différents !"
-  };
+  try {
+    // Vérifier si la clé API NVIDIA NIM est définie
+    if (!nvidiaNimConfig.apiKey) {
+      throw new Error("Clé API NVIDIA NIM manquante");
+    }
+
+    // Appel à l'API NVIDIA NIM
+    const response = await fetch(`${nvidiaNimConfig.baseUrl}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${nvidiaNimConfig.apiKey}`
+      },
+      body: JSON.stringify({
+        model: "nvidia/nemotron-4-340b-instruct",
+        messages: [
+          {
+            role: "user",
+            content: prompt
+          }
+        ]
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erreur API NVIDIA NIM: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Erreur lors de l'appel à l'API NVIDIA NIM:", error);
+    throw error;
+  }
 }
