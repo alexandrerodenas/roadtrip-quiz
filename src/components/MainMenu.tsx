@@ -39,6 +39,14 @@ export default function MainMenu() {
       iconPath: '/icons/maitre.svg',
       color: 'from-purple-500 to-pink-400',
       shadow: 'shadow-purple-500/20'
+    },
+    {
+      id: 'cuisine',
+      title: 'Cuisine Gourmande',
+      desc: 'Testez vos connaissances culinaires dans un mode solo avec sélecteur de difficulté.',
+      iconPath: '/icons/quiz.svg',
+      color: 'from-amber-500 to-orange-400',
+      shadow: 'shadow-amber-500/20'
     }
   ];
 
@@ -48,7 +56,7 @@ export default function MainMenu() {
         <div className="flex gap-4">
           {players.map((p, i) => (
             <div key={p.id} className="text-center px-4">
-              <div className="text-xs text-slate-400 uppercase tracking-wider font-bold">{i === 0 ? 'Conducteur' : 'Copilote'}</div>
+              <div className="text-xs text-slate-400 uppercase tracking-wider font-bold">{i === 0 ? 'Joueur' : 'Copilote'}</div>
               <div className="text-lg font-bold text-white">{p.name}</div>
               <div className="text-sm text-indigo-400">{p.score} pts</div>
             </div>

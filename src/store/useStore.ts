@@ -14,7 +14,7 @@ export type Player = {
   jokers: Jokers;
 };
 
-export type GameMode = 'menu' | 'coop' | 'duel' | 'maitre' | 'nordic';
+export type GameMode = 'menu' | 'coop' | 'duel' | 'maitre' | 'nordic' | 'cuisine';
 
 interface GameState {
   apiKey: string;
@@ -26,9 +26,11 @@ interface GameState {
   addJoker: (playerId: string, jokerType: keyof Jokers) => void;
   currentMode: GameMode;
   setMode: (mode: GameMode) => void;
-  nordicProgress: number; // Percentage or steps to Lofoten
+  nordicProgress: number;
   advanceNordic: (steps: number) => void;
   resetGame: () => void;
+  difficulty: string;
+  setDifficulty: (difficulty: string) => void;
 }
 
 const defaultJokers = { ferry: 1, aurora: 1, troll: 2 };
@@ -76,7 +78,9 @@ export const useStore = create<GameState>()(
         players: state.players.map(p => ({ ...p, score: 0, jokers: { ...defaultJokers } })),
         nordicProgress: 0,
         currentMode: 'menu'
-      }))
+      })),
+      difficulty: 'moyen',
+      setDifficulty: (difficulty) => set({ difficulty })
     }),
     {
       name: 'roadtrip-quiz-storage',

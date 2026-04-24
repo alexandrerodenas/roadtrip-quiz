@@ -6,6 +6,7 @@ import MainMenu from '../components/MainMenu';
 import QuizMode from '../components/QuizMode';
 import DuelMode from '../components/DuelMode';
 import MaitreMode from '../components/MaitreMode';
+import CuisineMode from '../components/CuisineMode';
 import { useEffect, useState } from 'react';
 
 export default function Home() {
@@ -44,6 +45,8 @@ export default function Home() {
       {currentMode === 'duel' && <DuelMode />}
       
       {currentMode === 'maitre' && <MaitreMode />}
+      
+      {currentMode === 'cuisine' && <CuisineMode title="Cuisine Gourmande" themeColor="amber" />}
     </>
   );
 }
