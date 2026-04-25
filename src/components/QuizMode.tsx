@@ -40,9 +40,10 @@ export default function QuizMode({ mode, title, themeColor }: QuizModeProps) {
     setTimeLeft(20);
     setEventMsg(null);
     setPointsMultiplier(1);
+    const { currentMode } = useStore.getState(); // Récupérer le mode depuis le store
 
     // Random Event (25% chance in Nordic mode)
-    if (mode === 'nordic' && Math.random() < 0.25) {
+    if (currentMode === 'nordic' && Math.random() < 0.25) {
       const events = [
         { title: "Tempête de Neige !", desc: "Temps réduit pour la prochaine question (-5s)", icon: <Snowflake className="w-12 h-12 text-cyan-300" />, effect: () => setTimeLeft(15) },
         { title: "Pause Fika ☕", desc: "Vous vous reposez et gagnez 1 Joker Troll (Indice) !", icon: <Coffee className="w-12 h-12 text-amber-600" />, effect: () => addJoker(players[0].id, 'troll') },

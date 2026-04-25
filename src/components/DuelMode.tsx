@@ -23,15 +23,10 @@ export default function DuelMode() {
     setError('');
     setShowResult(false);
     setSelectedAnswer(null);
-    const { mode } = useStore.getState(); // Récupérer le mode depuis le store
-    setHiddenOptions([]);
-    setShowHint(false);
-    setTimeLeft(20);
-    setEventMsg(null);
-    setPointsMultiplier(1);
+    const { currentMode } = useStore.getState(); // Récupérer le mode depuis le store
 
     try {
-      const data = await generateQuestion(mode, Math.floor(Math.random() * 10000), Date.now());
+      const data = await generateQuestion(currentMode, Math.floor(Math.random() * 10000), Date.now());
       setData(data);
     } catch (err: any) {
       setError("Erreur de génération.");
