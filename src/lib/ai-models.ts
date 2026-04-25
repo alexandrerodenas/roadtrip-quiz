@@ -1,57 +1,71 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { generateQuestionWithGemini, verifyGeminiApiKey } from './gemini';
+import { generateQuestionWithNvidia, verifyNvidiaApiKey } from './nvidia-nim';
 import { useStore } from '../store/useStore';
+import { Question } from '../types/quiz';
 
-export async function verifyGeminiApiKey(apiKey: string): Promise<boolean> {
-  try {
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-3.1-flash-lite-preview" });
-    await model.generateContent("Test");
-    return true;
-  } catch (error) {
-    console.error("Erreur de vérification de la clé:", error);
-    return false;
+// Fonction pour vérifier la clé API en fonction du modèle sélectionné
+export async function verifyApiKey(apiKey: string): Promise<boolean> {
+  const { selectedModel } = useStore.getState();
+  
+  switch (selectedModel) {
+    case 'gemini':
+      return await verifyGeminiApiKey(apiKey);
+    case 'nvidia':
+      return await verifyNvidiaApiKey(apiKey);
+    default:
+      return await verifyGeminiApiKey(apiKey);
   }
 }
 
-export async function generateQuestionWithGemini(mode: string, difficulty: string = 'moyen'): Promise<any> {
-  const { apiKey } = useStore.getState();
-  if (!apiKey) throw new Error("Clé API manquante");
-
-  const genAI = new GoogleGenerativeAI(apiKey);
-  const model = genAI.getGenerativeModel({ model: "gemini-3.1-flash-lite-preview" });
-
+// Fonction unifiée pour générer une question en fonction du modèle sélectionné
+export async function generateQuestion(mode: string, randomFactor: number = 0, timestamp: number = 0): Promise<Question> {
+  const { selectedModel, difficulty } = useStore.getState();
+  
+  // Construction du prompt en fonction du mode
   let prompt = "";
-
+  
   if (mode === 'nordic') {
     prompt = `Génère une question de quiz coopératif sur le thème d'un road trip de Nantes aux îles Lofoten (Norvège) avec retour par la Suède.
     Thèmes possibles: géographie, culture viking, vocabulaire norvégien/suédois, cuisine locale, histoire, mythes, faune (rennes, élans...).
     Difficulté : ${difficulty}.
+    Facteur d'aléatoire : ${randomFactor}. Timestamp : ${timestamp}.
     Format JSON exact: { "question": "La question", "options": ["A", "B", "C", "D"], "correctOptionIndex": 0, "funFact": "Une anecdote amusante", "indice": "Un petit indice utile" }`;
   } else if (mode === 'coop') {
     prompt = `Génère une question de culture générale amusante pour deux personnes en roadtrip.
     Difficulté : ${difficulty}.
+    Facteur d'aléatoire : ${randomFactor}. Timestamp : ${timestamp}.
     Format JSON exact: { "question": "La question", "options": ["A", "B", "C", "D"], "correctOptionIndex": 0, "funFact": "Une anecdote courte", "indice": "Un indice" }`;
   } else if (mode === 'duel') {
     prompt = `Génère une question de culture générale compétitive et un peu tordue/piège pour un duel.
     Difficulté : ${difficulty}.
+    Facteur d'aléatoire : ${randomFactor}. Timestamp : ${timestamp}.
     Format JSON exact: { "question": "La question", "options": ["A", "B", "C", "D"], "correctOptionIndex": 0, "funFact": "Une pique amicale ou anecdote", "indice": "Un indice" }`;
   } else if (mode === 'maitre') {
     prompt = `Génère un concept, un personnage historique ou un lieu célèbre à faire deviner (Jeu du Taboo/Burger Quiz).
     Donne le mot à faire deviner, et 3 mots INTERDITS qu'il ne faut pas prononcer.
+    Facteur d'aléatoire : ${randomFactor}. Timestamp : ${timestamp}.
     Format JSON exact: { "wordToGuess": "Le mot", "forbiddenWords": ["Mot1", "Mot2", "Mot3"], "hint": "Un indice que le maître du jeu peut donner" }`;
   } else if (mode === 'cuisine') {
     prompt = `Génère une question de cuisine.
     Difficulté : ${difficulty}.
+    Facteur d'aléatoire : ${randomFactor}. Timestamp : ${timestamp}.
     Format JSON exact: { "question": "La question", "options": ["A", "B", "C", "D"], "correctOptionIndex": 0, "funFact": "Une anecdote amusante", "indice": "Un petit indice utile" }`;
   }
 
-  try {
-    const result = await model.generateContent(prompt);
-    const text = result.response.text();
-    const cleanText = text.replace(/```json/g, '').replace(/```/g, '').trim();
-    return JSON.parse(cleanText);
-  } catch (error) {
-    console.error("Erreur Gemini détaillée:", error);
-    throw error;
+  // Génération de la question en fonction du modèle sélectionné
+  switch (selectedModel) {
+    case 'gemini':
+      return await generateQuestionWithGemini(mode, difficulty);
+      
+    case 'nvidia':
+      const nvidiaResponse = await generateQuestionWithNvidia(prompt);
+      // Extraction de la réponse au format JSON
+      const content = nvidiaResponse.choices[0].message.content;
+      const cleanContent = content.replace(/```json/g, '').replace(/```/g, '').trim();
+      return JSON.parse(cleanContent);
+      
+    default:
+      // Par défaut, utiliser Gemini
+      return await generateQuestionWithGemini(mode, difficulty);
   }
 }

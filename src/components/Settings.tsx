@@ -4,9 +4,10 @@ import { useState, useEffect } from 'react';
 import { useStore } from '../store/useStore';
 import { motion } from 'framer-motion';
 import { Settings as SettingsIcon, Car, Key, Users, Loader2, Palette } from 'lucide-react';
+import { verifyApiKey } from '../lib/ai-models';
 
 export default function Settings() {
-  const { apiKey, setApiKey, players, setPlayers, setMode, difficulty, setDifficulty } = useStore();
+  const { apiKey, setApiKey, players, setPlayers, setMode, difficulty, setDifficulty, selectedModel, setSelectedModel } = useStore();
   const [localKey, setLocalKey] = useState(apiKey);
   const [player1, setPlayer1] = useState(players[0]?.name || '');
   const [player2, setPlayer2] = useState(players[1]?.name || '');
@@ -15,7 +16,7 @@ export default function Settings() {
 
   const handleSave = async () => {
     if (!localKey) {
-      setError("Il faut une clé API Gemini !");
+      setError("Il faut une clé API !");
       return;
     }
     if (!player1) {
@@ -26,8 +27,13 @@ export default function Settings() {
     setIsVerifying(true);
     setError('');
     
-    // Vérification de la clé API (simulée ici)
-    setIsVerifying(false);
+    // Vérification de la clé API en fonction du modèle sélectionné
+    const isValid = await verifyApiKey(localKey);
+    if (!isValid) {
+      setError("Clé API invalide. Veuillez vérifier votre clé.");
+      setIsVerifying(false);
+      return;
+    }
     
     // Sauvegarde des paramètres
     setApiKey(localKey);
@@ -75,11 +81,11 @@ export default function Settings() {
         <div>
           <label className="flex items-center text-sm font-medium text-slate-300 mb-2">
             <Key className="w-4 h-4 mr-2 text-amber-400" />
-            Clé API Google Gemini
+            Clé API
           </label>
           <input 
             type="password" 
-            placeholder="AIzaSy..." 
+            placeholder="Clé API (Gemini ou NVIDIA)" 
             value={localKey}
             onChange={(e) => setLocalKey(e.target.value)}
             className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all"

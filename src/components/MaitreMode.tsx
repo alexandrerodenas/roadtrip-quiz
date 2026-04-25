@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { generateQuestion } from '../lib/gemini';
+import { generateQuestion } from '../lib/ai-models';
 import { useStore } from '../store/useStore';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Loader2, ArrowRight, AlertCircle, Eye, EyeOff } from 'lucide-react';
@@ -18,7 +18,7 @@ export default function MaitreMode() {
     setError('');
     setShowSecret(false);
     try {
-      const result = await generateQuestion('maitre');
+      const result = await generateQuestion('maitre', Math.floor(Math.random() * 10000), Date.now());
       setData(result);
     } catch (err: any) {
       setError("Erreur de génération.");

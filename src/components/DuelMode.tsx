@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { generateQuestion } from '../lib/gemini';
+import { generateQuestion } from '../lib/ai-models';
 import { useStore } from '../store/useStore';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Loader2, ArrowRight, AlertCircle, CircleDashed, ShieldAlert } from 'lucide-react';
@@ -23,9 +23,16 @@ export default function DuelMode() {
     setError('');
     setShowResult(false);
     setSelectedAnswer(null);
+    const { mode } = useStore.getState(); // Récupérer le mode depuis le store
+    setHiddenOptions([]);
+    setShowHint(false);
+    setTimeLeft(20);
+    setEventMsg(null);
+    setPointsMultiplier(1);
+
     try {
-      const result = await generateQuestion('duel');
-      setData(result);
+      const data = await generateQuestion(mode, Math.floor(Math.random() * 10000), Date.now());
+      setData(data);
     } catch (err: any) {
       setError("Erreur de génération.");
     } finally {

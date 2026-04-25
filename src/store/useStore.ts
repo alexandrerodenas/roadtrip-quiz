@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+// Types
 export type Jokers = {
   ferry: number;
   aurora: number;
@@ -15,6 +16,7 @@ export type Player = {
 };
 
 export type GameMode = 'menu' | 'coop' | 'duel' | 'maitre' | 'nordic' | 'cuisine';
+export type AIModelType = 'gemini' | 'nvidia' | 'openai' | 'claude';
 
 interface GameState {
   apiKey: string;
@@ -31,6 +33,11 @@ interface GameState {
   resetGame: () => void;
   difficulty: string;
   setDifficulty: (difficulty: string) => void;
+  // Nouvelles propriétés pour la gestion des modèles
+  selectedModel: AIModelType;
+  setSelectedModel: (model: AIModelType) => void;
+  nvidiaApiKey: string;
+  setNvidiaApiKey: (key: string) => void;
 }
 
 const defaultJokers = { ferry: 1, aurora: 1, troll: 2 };
@@ -81,8 +88,11 @@ export const useStore = create<GameState>()(
       })),
       difficulty: 'moyen',
       setDifficulty: (difficulty) => set({ difficulty }),
-      // Ajout de méthodes pour le mode cuisine
-      // ... (à implémenter)
+      // Initialisation des nouvelles propriétés
+      selectedModel: 'gemini',
+      setSelectedModel: (model) => set({ selectedModel: model }),
+      nvidiaApiKey: '',
+      setNvidiaApiKey: (key) => set({ nvidiaApiKey: key }),
     }),
     {
       name: 'roadtrip-quiz-storage',

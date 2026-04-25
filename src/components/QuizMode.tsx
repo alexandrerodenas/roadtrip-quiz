@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { generateQuestion } from '../lib/gemini';
+import { generateQuestion } from '../lib/ai-models';
 import { useStore, GameMode } from '../store/useStore';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Loader2, ArrowRight, AlertCircle, MapPin, Sparkles, Ship, Eye, Snowflake, Coffee, Timer, Route, Navigation, Radar } from 'lucide-react';
@@ -57,8 +57,12 @@ export default function QuizMode({ mode, title, themeColor }: QuizModeProps) {
       setEventMsg(null);
     }
 
+    // Ajouter un facteur d'aléatoire pour éviter les répétitions de questions
+    const randomFactor = Math.floor(Math.random() * 10000);
+    const timestamp = Date.now();
+
     try {
-      const data = await generateQuestion(mode);
+      const data = await generateQuestion(mode, randomFactor, timestamp);
       setQuestionData(data);
     } catch (err: any) {
       setError("Impossible de générer la question. Vérifiez votre connexion et votre clé API.");

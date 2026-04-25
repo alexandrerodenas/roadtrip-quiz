@@ -7,6 +7,7 @@ import QuizMode from '../components/QuizMode';
 import DuelMode from '../components/DuelMode';
 import MaitreMode from '../components/MaitreMode';
 import CuisineMode from '../components/CuisineMode';
+import ModelSelector from '../components/ModelSelector'; // Nouveau composant
 import { useEffect, useState } from 'react';
 
 export default function Home() {
@@ -31,6 +32,9 @@ export default function Home() {
         </h1>
         {currentMode === 'menu' && <p className="text-slate-400">Prêts pour l'aventure ?</p>}
       </header>
+
+      {/* Sélecteur de modèle */}
+      <ModelSelector />
 
       {currentMode === 'menu' && <MainMenu />}
       
